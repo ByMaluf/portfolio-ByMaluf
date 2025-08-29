@@ -1,68 +1,125 @@
 :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
-
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
-
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  /* cor base (só muda o HUE) */
+  --h: 190; /* 210 azul, 260 roxo, 160 verde */
+  --s: 28%;
+  --l0: 6%;
+  --l1: 10%;
+  --l2: 18%;
+  --l3: 28%;
 }
 
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
+/* animar posições dos focos (suave e nativo) */
+@property --g1x {
+  syntax: "<percentage>";
+  inherits: false;
+  initial-value: 20%;
 }
-a:hover {
-  color: #535bf2;
+@property --g1y {
+  syntax: "<percentage>";
+  inherits: false;
+  initial-value: 22%;
+}
+@property --g2x {
+  syntax: "<percentage>";
+  inherits: false;
+  initial-value: 72%;
+}
+@property --g2y {
+  syntax: "<percentage>";
+  inherits: false;
+  initial-value: 58%;
 }
 
+html,
+body {
+  height: 100%;
+}
 body {
   margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
+  color: #e7eef3;
+  background-color: hsl(var(--h) var(--s) var(--l1));
+  background-image:
+    /* “spotlight” 1 */ radial-gradient(
+      60rem 60rem at var(--g1x) var(--g1y),
+      hsl(var(--h) var(--s) calc(var(--l3) + 4%) / 0.85) 0%,
+      transparent 55%
+    ),
+    /* “spotlight” 2 */
+      radial-gradient(
+        48rem 48rem at var(--g2x) var(--g2y),
+        hsl(var(--h) var(--s) var(--l2) / 0.7) 0%,
+        transparent 50%
+      ),
+    /* base vertical pra dar profundidade */
+      linear-gradient(
+        180deg,
+        hsl(var(--h) var(--s) var(--l1)) 0%,
+        hsl(var(--h) var(--s) var(--l0)) 90%
+      );
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  animation: drift 22s cubic-bezier(0.4, 0, 0.2, 1) infinite alternate;
+  isolation: isolate;
 }
 
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
-}
-
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
-}
-
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
+/* movimento MUITO sutil dos focos */
+@keyframes drift {
+  0% {
+    --g1x: 18%;
+    --g1y: 24%;
+    --g2x: 74%;
+    --g2y: 56%;
   }
-  a:hover {
-    color: #747bff;
+  50% {
+    --g1x: 28%;
+    --g1y: 18%;
+    --g2x: 64%;
+    --g2y: 68%;
   }
-  button {
-    background-color: #f9f9f9;
+  100% {
+    --g1x: 22%;
+    --g1y: 30%;
+    --g2x: 80%;
+    --g2y: 54%;
+  }
+}
+
+/* grão fino (não desfoca nada) */
+body::after {
+  content: "";
+  position: fixed;
+  inset: -25%;
+  pointer-events: none;
+  mix-blend-mode: soft-light;
+  opacity: 0.035;
+  will-change: transform;
+  background-image: radial-gradient(#fff 0.45px, transparent 0.45px),
+    radial-gradient(#000 0.6px, transparent 0.6px);
+  background-size: 2px 2px, 2.5px 2.5px;
+  background-position: 0 0, 0.5px 0.5px;
+}
+
+/* vinheta suave nas bordas (sem blur) */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(
+      1200px 800px at 50% -10%,
+      rgba(255, 255, 255, 0.03),
+      transparent 60%
+    ),
+    radial-gradient(
+      1000px 800px at 50% 120%,
+      rgba(0, 0, 0, 0.35),
+      transparent 60%
+    );
+}
+
+/* acessibilidade: se preferir sem movimento, fica estático */
+@media (prefers-reduced-motion: reduce) {
+  body {
+    animation: none;
   }
 }

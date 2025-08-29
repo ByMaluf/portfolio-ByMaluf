@@ -1,42 +1,79 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+:root {
+  /* mude só o H (matiz) para trocar a cor mantendo o estilo */
+  --h: 190; /* teal/azulado; ex: 260 = roxo, 140 = verde, 210 = azul */
+  --s: 28%; /* saturação base */
+  --l0: 6%; /* luz mais escura (rodapé/vinheta) */
+  --l1: 10%;
+  --l2: 18%;
+  --l3: 28%; /* luz mais clara (glow) */
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+html,
+body {
+  height: 100%;
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+body {
+  margin: 0;
+  color: #e7eef3;
+  background-color: hsl(var(--h) var(--s) var(--l1));
+
+  /* Fundo monocromático com “manchas” de luz na MESMA cor (só variando lightness) */
+  background-image: radial-gradient(
+      1100px 1100px at 25% 18%,
+      hsl(var(--h) var(--s) var(--l3) / 0.9) 0%,
+      transparent 45%
+    ),
+    radial-gradient(
+      900px 900px at 72% 55%,
+      hsl(var(--h) var(--s) var(--l2) / 0.75) 0%,
+      transparent 40%
+    ),
+    radial-gradient(
+      1600px 1200px at 50% 115%,
+      hsl(var(--h) var(--s) var(--l0) / 1) 30%,
+      transparent 70%
+    ),
+    /* vinheta inferior */
+      radial-gradient(
+        1400px 900px at -10% -10%,
+        rgba(255, 255, 255, 0.04) 0%,
+        transparent 60%
+      ); /* leve bloom superior */
+  background-repeat: no-repeat;
+  background-attachment: fixed; /* dá um “peso” elegante em telas grandes */
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
+/* Camada de grão 100% CSS (sem imagens), não embaça o conteúdo */
+body::after {
+  content: "";
+  position: fixed;
+  inset: -25%; /* maior que a viewport pra evitar bordas na rolagem */
+  pointer-events: none;
+  mix-blend-mode: soft-light; /* mistura sutil com o fundo */
+  opacity: 0.035; /* força do grão */
+  /* Dois padrões de “dots” em tamanhos diferentes e deslocados para quebrar a grade */
+  background-image: radial-gradient(#fff 0.5px, transparent 0.5px),
+    radial-gradient(#fff 0.5px, transparent 0.5px),
+    radial-gradient(#000 0.6px, transparent 0.6px);
+  background-size: 2px 2px, 3px 3px, 2.5px 2.5px;
+  background-position: 0 0, 1px 1px, 0.5px 0.5px;
 }
 
-.card {
-  padding: 2em;
-}
-
-.read-the-docs {
-  color: #888;
+/* Vinheta extra nas bordas (bem leve, sem blur) */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(
+      1200px 800px at 50% -10%,
+      rgba(255, 255, 255, 0.03),
+      transparent 60%
+    ),
+    radial-gradient(
+      1000px 800px at 50% 120%,
+      rgba(0, 0, 0, 0.35),
+      transparent 60%
+    );
 }
